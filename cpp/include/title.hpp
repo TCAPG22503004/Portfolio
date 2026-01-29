@@ -11,10 +11,12 @@ class Title {
 			"Config",
 			"Exit",
 		};
+		const char* arrow = "> ";
 		
 		int fontHandle;
-		unsigned int white;
 		int strPos[3][2];	// [number of str (change to need)][x, y (no change)]
+		int arrowPosX;
+		unsigned int white;
 
 		void Init();
 		void SetStringInformation();
