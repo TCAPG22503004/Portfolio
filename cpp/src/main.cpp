@@ -1,0 +1,64 @@
+# include "DxLib.h"
+# include "title.hpp"
+
+
+void BeforeInit() {
+
+	SetGraphMode(1280, 720, 16);
+	SetMainWindowText("Fly");
+	ChangeWindowMode(TRUE);		// not full screen
+
+	return;
+}
+
+void AfterInit() {
+
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	return;
+}
+
+void Game() {
+
+	Title title;
+
+	int mode = 0;
+
+	while(mode != -1) {
+
+		switch(mode) {
+
+			case 0:
+				mode = title.test();
+				break;
+
+			case 1:
+				// Game();
+				break;
+
+			default:
+				mode = -1;
+				break;
+		}
+
+		// break in abnormal end
+		if (ProcessMessage() == -1) break;
+	}
+	return;
+}
+
+
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine, int nCmdShow) {
+
+	// initialize
+	BeforeInit();
+	if (DxLib_Init() == -1) return -1;
+	AfterInit();
+
+	// game
+	Game();
+
+	// finish
+	DxLib_End();
+	return 0;
+}
