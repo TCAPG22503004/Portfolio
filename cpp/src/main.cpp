@@ -29,11 +29,15 @@ void Game() {
 		switch(mode) {
 
 			case 0:
-				mode = title.test();
+				mode = title.TitleMode();
 				break;
 
 			case 1:
-				// Game();
+				// mode = Game();
+				ClearDrawScreen();
+				ScreenFlip();
+				WaitKey();
+				mode = 0;
 				break;
 
 			default:

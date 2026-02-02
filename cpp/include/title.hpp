@@ -6,24 +6,28 @@ class Title {
 	private:
 		int fontSize = 64;
 		int fontThick = 16;
-		const char* str[3] = {
+		static const int nStr = 3;
+		const char* str[nStr] = {
 			"Fly",
 			"Config",
 			"Exit",
 		};
 		const char* arrow = "> ";
 		
+		int select;
 		int fontHandle;
-		int strPos[3][2];	// [number of str (change to need)][x, y (no change)]
+		int strPos[nStr][2];
 		int arrowPosX;
 		unsigned int white;
 
 		void Init();
 		void SetStringInformation();
+		bool Select();
+		void Draw();
 		void End();
 
 	public:
-		int test();
+		int TitleMode();
 };
 
 # endif

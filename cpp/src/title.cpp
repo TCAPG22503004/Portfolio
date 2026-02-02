@@ -5,20 +5,24 @@
 /* ----------------
 	public
 ------------------- */
-int Title::test() {
+int Title::TitleMode() {
 
 	Init();
 	SetStringInformation();
 
-	for (int i = 0; i < 3; i++) {
-		DrawStringToHandle(strPos[i][0], strPos[i][1], str[i], white, fontHandle);
-	}
-	DrawStringToHandle(arrowPosX, strPos[1][1], arrow, white, fontHandle);
+	Draw();
 
-	ScreenFlip();
-	WaitKey();
+	bool isLoop = true;
+	while (isLoop) {
+		isLoop = Select();
+		if (ProcessMessage() == -1) break;
+	}
 
 	End();
+
+	// start game
+	if (select == 0) return 1;
+
 	return -1;
 }
 
@@ -41,17 +45,16 @@ void Title::SetStringInformation() {
 	GetScreenState(&sx, &sy, NULL);
 
 	int xMin = 9999;
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < nStr; i++) {
 
 		// set strPos
-		// (change value if number of str is changed)
 		int x;
 		int w = GetDrawStringWidthToHandle(str[i], strlen(str[i]), fontHandle);
 		x = (sx - w) / 2;
 		strPos[i][0] = x;
 
 		int y;
-		y = sy / 4 * (i+1) - fontSize / 2;
+		y = sy / (nStr + 1) * (i+1) - fontSize / 2;
 		strPos[i][1] = y;
 
 		// prepare creating arrowPos
@@ -64,6 +67,51 @@ void Title::SetStringInformation() {
 	x = xMin - w;
 	arrowPosX = x;
 
+	return;
+}
+
+
+bool Title::Select() {
+
+	int key = WaitKey();
+
+	// change scene
+	if (key == KEY_INPUT_SPACE) {
+		return false;
+	}
+
+	// move arrow
+	else if (key == KEY_INPUT_UP) {
+		if (select > 0) {
+			select--;
+			Draw();
+		}
+	}
+
+	else if (key == KEY_INPUT_DOWN) {
+		if (select < nStr - 1) {
+			select++;
+			Draw();
+		}
+	}
+
+	return true;
+}
+
+
+void Title::Draw() {
+
+	ClearDrawScreen();
+
+	// string
+	for (int i = 0; i < nStr; i++) {
+		DrawStringToHandle(strPos[i][0], strPos[i][1], str[i], white, fontHandle);
+	}
+
+	// arrow
+	DrawStringToHandle(arrowPosX, strPos[select][1], arrow, white, fontHandle);
+
+	ScreenFlip();
 
 	return;
 }
