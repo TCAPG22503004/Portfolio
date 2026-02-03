@@ -6,7 +6,11 @@ rem (Link from under to upper)
 rem ---------------------------
 set f0=main
 set f1=title
-
+set f2=game
+set f3=player
+set f4=object
+set f5=perspective
+set f6=quaternion
 
 
 

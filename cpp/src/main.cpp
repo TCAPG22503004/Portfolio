@@ -1,5 +1,6 @@
 # include "DxLib.h"
 # include "title.hpp"
+# include "game.hpp"
 
 
 void BeforeInit() {
@@ -18,9 +19,10 @@ void AfterInit() {
 	return;
 }
 
-void Game() {
+void MainLoop() {
 
 	Title title;
+	Game game;
 
 	int mode = 0;
 
@@ -33,11 +35,7 @@ void Game() {
 				break;
 
 			case 1:
-				// mode = Game();
-				ClearDrawScreen();
-				ScreenFlip();
-				WaitKey();
-				mode = 0;
+				mode = game.GameMode();
 				break;
 
 			default:
@@ -60,7 +58,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR IpCmdLine
 	AfterInit();
 
 	// game
-	Game();
+	MainLoop();
 
 	// finish
 	DxLib_End();

@@ -15,6 +15,8 @@ int Title::TitleMode() {
 	bool isLoop = true;
 	while (isLoop) {
 		isLoop = Select();
+
+		// break in abnormal end
 		if (ProcessMessage() == -1) break;
 	}
 
@@ -80,7 +82,7 @@ bool Title::Select() {
 		return false;
 	}
 
-	// move arrow
+	// move arrow & update screen
 	else if (key == KEY_INPUT_UP) {
 		if (select > 0) {
 			select--;
