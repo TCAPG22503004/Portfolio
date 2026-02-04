@@ -5,8 +5,6 @@ class Game {
 
 	private:
 		int fps = 60;
-		float speed = 3;
-		float dRot = 0.001;
 
 		float playerPos[3];
 		float playerRot[4] = {1, 0, 0, 0};

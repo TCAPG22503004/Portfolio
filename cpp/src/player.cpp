@@ -1,15 +1,50 @@
 # include "DxLib.h"
 # include "player.hpp"
+# include "quaternion.hpp"
 
 /* ----------------
 	public
 ------------------- */
-void Player::Move(float pos[3]) {
+void Player::Move(float pos[3], float rot[4]) {
+
+	Quaternion q;
+
+	// right-handed system: (+x, +y, +z) = (right, front, up)
+	float v[3] = {0, moveSpeed, 0};
+
+	// rotate move direction
+	q.RotateCoordinate(v, rot, v);
+
+	// update player position
+	for (int i = 0; i < 3; i++) {
+		pos[i] += v[i];
+	}
 
 	return;
 }
 
-void Player::KeyInput(float rot1[4], float rot2[4]) {
+void Player::Rotate(float rot[4]) {
+
+	Quaternion q;
+
+	if (CheckHitKey(KEY_INPUT_W) == 1) {
+		q.ProductWorld(rot, deltaRotate, 1, rot);
+	}
+	if (CheckHitKey(KEY_INPUT_S) == 1) {
+		q.ProductWorld(rot, -deltaRotate, 1, rot);
+	}
+	if (CheckHitKey(KEY_INPUT_Q) == 1) {
+		q.ProductWorld(rot, deltaRotate, 2, rot);
+	}
+	if (CheckHitKey(KEY_INPUT_E) == 1) {
+		q.ProductWorld(rot, -deltaRotate, 2, rot);
+	}
+	if (CheckHitKey(KEY_INPUT_A) == 1) {
+		q.ProductWorld(rot, deltaRotate, 3, rot);
+	}
+	if (CheckHitKey(KEY_INPUT_D) == 1) {
+		q.ProductWorld(rot, -deltaRotate, 3, rot);
+	}
 
 	return;
 }
@@ -18,7 +53,3 @@ void Player::KeyInput(float rot1[4], float rot2[4]) {
 /* -----------------
 	private
 -------------------- */
-void Player::Rotate(float rot1[4], float rot2[4]) {
-
-	return;
-}

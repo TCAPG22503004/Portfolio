@@ -3,12 +3,20 @@
 
 class Object {
 	private:
-		void MakeObject();
+		int newObjDistanceXZ = 5000;
+		int newObjDistanceY = 10000;
+		int newObjSize = 100;
+		float posRandomRatio = 0.2;
+		float sizRandomRatio = 0.5;
+
+		int center[3];
+		int delta[3];
+
+		void SetInitCenter(float rot[3], int Y);
+		void MakeObject(int o[3], int d[3], int result[16][3]);
 
 	public:
-		// pos: array[10][16][3] -> [num of object][num of vertex][(x, y, z)]
-		void UpdateObjectList(int n, float *pos);
-		void Draw(int n, float *pos, float rot[4]);
+		void UpdateObjectList(int objList[16][3], float rot[3], int direction);
 };
 
 # endif

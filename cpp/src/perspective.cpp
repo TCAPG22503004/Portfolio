@@ -9,6 +9,8 @@
 ------------------- */
 bool Perspective::SetXY(float pos[3], float result[2]) {
 
+	Init();
+
 	// behind
 	if (pos[2] < 0) return false;
 

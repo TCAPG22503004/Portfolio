@@ -3,11 +3,12 @@
 
 class Player {
 	private:
-		void Rotate(float rot1[4], float rot2[4]);
+		float moveSpeed = 3;
+		float deltaRotate = 0.001;
 
 	public:
-		void Move(float pos[3]);
-		void KeyInput(float rot1[4], float rot2[4]);
+		void Move(float pos[3], float rot[4]);
+		void Rotate(float rot[4]);
 };
 
 # endif
