@@ -1,22 +1,82 @@
-# include "DxLib.h"
+# include <cmath>
 # include "quaternion.hpp"
 
 /* ----------------
 	public
 ------------------- */
-void Quaternion::RotateObject(float *pos, float rot[4]) {
+void Quaternion::RotateObject(float pos[3], float rot[4], float result[3]) {
+
+		// make matrix
+		float a[3][3];
+		a[0][0] = rot[0]*rot[0] + rot[1]*rot[1] - rot[2]*rot[2] - rot[3]*rot[3];
+		a[0][1] = 2 * (rot[1]*rot[2] - rot[0]*rot[3]);
+		a[0][2] = 2 * (rot[1]*rot[3] + rot[0]*rot[2]);
+		a[1][0] = 2 * (rot[1]*rot[2] + rot[0]*rot[3]);
+		a[1][1] = rot[0]*rot[0] - rot[1]*rot[1] + rot[2]*rot[2] - rot[3]*rot[3];
+		a[1][2] = 2 * (rot[2]*rot[3] - rot[0]*rot[1]);
+		a[2][0] = 2 * (rot[1]*rot[3] - rot[0]*rot[2]);
+		a[2][1] = 2 * (rot[2]*rot[3] + rot[0]*rot[1]);
+		a[2][2] = rot[0]*rot[0] - rot[1]*rot[1] - rot[2]*rot[2] + rot[3]*rot[3];
+
+
+		// product
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				result[i] += a[i][j] * pos[j];
+			}
+		}
+
+		return;
+}
+
+
+void Quaternion::RotateCoordinate(float pos[3], float rot[4], float result[3]) {
+
+		// make matrix
+		float a[3][3];
+		a[0][0] = rot[0]*rot[0] + rot[1]*rot[1] - rot[2]*rot[2] - rot[3]*rot[3];
+		a[0][1] = 2 * (rot[1]*rot[2] + rot[0]*rot[3]);
+		a[0][2] = 2 * (rot[1]*rot[3] - rot[0]*rot[2]);
+		a[1][0] = 2 * (rot[1]*rot[2] - rot[0]*rot[3]);
+		a[1][1] = rot[0]*rot[0] - rot[1]*rot[1] + rot[2]*rot[2] - rot[3]*rot[3];
+		a[1][2] = 2 * (rot[2]*rot[3] + rot[0]*rot[1]);
+		a[2][0] = 2 * (rot[1]*rot[3] + rot[0]*rot[2]);
+		a[2][1] = 2 * (rot[2]*rot[3] - rot[0]*rot[1]);
+		a[2][2] = rot[0]*rot[0] - rot[1]*rot[1] - rot[2]*rot[2] + rot[3]*rot[3];
+
+
+		// product
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				result[i] += a[i][j] * pos[j];
+			}
+		}
+
+		return;
+}
+
+
+void Quaternion::ProductWorld(float rot[4], float delta, int n, float result[4]) {
+
+	// make rotate quaternion
+	float d[4] = {std::cos(delta), 0, 0, 0};
+	d[n] = std::sin(delta);
+
+	// product
+	ProductQuaternion(d, rot, result);
 
 	return;
 }
 
 
-void Quaternion::RotateWorld(float pos[3], float rot[4]) {
+void Quaternion::ProductLocal(float rot[4], float delta, int n, float result[4]) {
 
-	return;
-}
+	// make rotate quaternion
+	float d[4] = {std::cos(delta), 0, 0, 0};
+	d[n] = std::sin(delta);
 
-
-void Quaternion::RotateLocal(float pos[3], float rot[4]) {
+	// product
+	ProductQuaternion(rot, d, result);
 
 	return;
 }
@@ -25,7 +85,22 @@ void Quaternion::RotateLocal(float pos[3], float rot[4]) {
 /* -----------------
 	private
 -------------------- */
-void Quaternion::CalculateQuaternion(float pos[4], float rot[4]) {
+void Quaternion::ProductQuaternion(float left[4], float right[4], float result[4]) {
+
+	// make matrix
+	float newLeft[4][4] = {
+		{left[0], -left[1], -left[2], -left[3]},
+		{left[1],  left[0], -left[3],  left[2]},
+		{left[2],  left[3],  left[0], -left[1]},
+		{left[3], -left[2],  left[1],  left[0]}
+	};
+
+	// calculate
+	for (int i = 0; i < 4; i++) {
+		for (int j = 0; j < 4; j++) {
+			result[i] += newLeft[i][j] * right[j];
+		}
+	}
 
 	return;
 }

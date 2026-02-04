@@ -7,7 +7,7 @@ class Player {
 
 	public:
 		void Move(float pos[3]);
-		bool KeyInput(float rot1[4], float rot2[4]);
+		void KeyInput(float rot1[4], float rot2[4]);
 };
 
 # endif

@@ -3,11 +3,12 @@
 
 class Quaternion {
 	private:
-		void CalculateQuaternion(float pos[4], float rot[4]);
+		void ProductQuaternion(float left[4], float right[4], float result[4]);
 	public:
-		void RotateObject(float *pos, float rot[4]);
-		void RotateWorld(float pos[3], float rot[4]);
-		void RotateLocal(float pos[3], float rot[4]);
+		void RotateObject(float pos[3], float rot[4], float result[3]);
+		void RotateCoordinate(float pos[3], float rot[4], float result[3]);
+		void ProductWorld(float rot[4], float delta, int n, float result[4]);
+		void ProductLocal(float rot[4], float delta, int n, float result[4]);
 };
 
 # endif
