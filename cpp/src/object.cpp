@@ -7,7 +7,7 @@
 /* ----------------
 	public
 ------------------- */
-void Object::UpdateObjectList(int objList[16][3], float rot[4], int direction[3]) {
+void Object::UpdateObjectList(float objList[16][3], float rot[4], int direction[3]) {
 
 	// not create
 	int zero[3] = {0, 0, 0};
@@ -122,7 +122,7 @@ void Object::SetCenterAndDelta(float rot[4], int d[3]) {
 
 
 
-void Object::MakeObject(int result[16][3]) {
+void Object::MakeObject(float result[16][3]) {
 
 	// + or - list
 	int sign[16][3] = {

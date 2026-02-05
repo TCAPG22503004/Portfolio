@@ -78,7 +78,7 @@ bool Title::Select() {
 	int key = WaitKey();
 
 	// change scene
-	if (key == KEY_INPUT_SPACE) {
+	if (key == KEY_INPUT_SPACE || key == KEY_INPUT_RETURN) {
 		return false;
 	}
 

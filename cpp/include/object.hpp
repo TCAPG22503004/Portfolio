@@ -14,10 +14,10 @@ class Object {
 
 		void SetTheta(int d[3]);
 		void SetCenterAndDelta(float rot[4], int d[3]);
-		void MakeObject(int result[16][3]);
+		void MakeObject(float result[16][3]);
 
 	public:
-		void UpdateObjectList(int objList[16][3], float rot[4], int direction[3]);
+		void UpdateObjectList(float objList[16][3], float rot[4], int direction[3]);
 };
 
 # endif
