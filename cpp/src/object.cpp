@@ -1,51 +1,31 @@
 # include <random>
+# include "DxLib.h"
 # include "object.hpp"
+# include "perspective.hpp"
 # include "quaternion.hpp"
 
 /* ----------------
 	public
 ------------------- */
-void Object::UpdateObjectList(int objList[16][3], float rot[3], int direction) {
+void Object::UpdateObjectList(int objList[16][3], float rot[4], int direction[3]) {
 
 	// not create
-	if (direction == 0) return;
+	int zero[3] = {0, 0, 0};
+	if (direction == zero) return;
 
 
-	// init <random>
-	std::random_device seed_gen;
-	std::uint32_t seed = seed_gen();
-	std::mt19937 engine(seed);
-	std::uniform_real_distribution<float> distPos(0, posRandomRatio);
-	std::uniform_real_distribution<float> distSiz(0, sizRandomRatio);
+	// set create angle
+	SetTheta(direction);
 	
-	// init center
-	SetInitCenter(rot, direction);
+	float rotObj[4];
+	Quaternion q;
+	q.ProductLocal(rot, thetaX, 1, rotObj);
+	q.ProductLocal(rotObj, thetaZ, 3, rotObj);
 
 
-	// create front
-	if (direction == 1) {
-		a = 1;
-	}
-
-	// create right
-	else if (direction == 2) {
-		a = 1;
-	}
-
-	// create left
-	else if (direction == 3) {
-		a = 1;
-	}
-
-	// create up
-	else if (direction == 4) {
-		a = 1;
-	}
-
-	// create down
-	else if (direction == 5) {
-		a = 1;
-	}
+	// create object
+	SetCenterAndDelta(rotObj, direction);
+	MakeObject(objList);
 
 	return;
 }
@@ -55,18 +35,91 @@ void Object::UpdateObjectList(int objList[16][3], float rot[3], int direction) {
 /* -----------------
 	private
 -------------------- */
-void Object::SetInitCenter(float rot[3], int Y) {
+void Object::SetTheta(int d[3]) {
 
-	// set length
-	if (Y == 1) center[2] = newObjDistanceY;
-	else center[2] = newObjDistanceXZ;
+	// init <random>
+	std::random_device seed_gen;
+	std::uint32_t seed = seed_gen();
+	std::mt19937 engine(seed);
+	std::uniform_real_distribution<float> dist(-1, 1);
 
-	// rotate
-	Quaternion q;
-	q.RotateCoordinate(center, rot, center);
+	// x: fov / 2(-> change view from \/ to \|) / 2(-> quaternion uses half anguler)
+	Perspective p;
+	float fov = p.GetFov();
+
+	thetaX = fov / 2 / 2;
+
+	// z: x * aspect
+	int sx, sy;
+	GetScreenState(&sx, &sy, NULL);
+
+	thetaZ = thetaX * sy / sx;
+
+
+	// set theta
+	// create front
+	if (d[1] != 0) {
+		thetaX *= dist(engine);
+		thetaZ *= dist(engine);
+	}
+
+	else {
+		// create outside of left or right
+		if (d[0] != 0) {
+			thetaX *= d[0];
+		}
+	
+		// (else) create random position
+		else {
+			thetaX *= dist(engine);
+		}
+	
+		// create outside of up or down
+		if (d[2] != 0) {
+			thetaZ *= d[2];
+		}
+	
+		// (else) create random position
+		else {
+			thetaZ *= dist(engine);
+		}
+	}
 
 	return;
 }
+
+
+
+void Object::SetCenterAndDelta(float rot[4], int d[3]) {
+
+	// init <random>
+	std::random_device seed_gen;
+	std::uint32_t seed = seed_gen();
+	std::mt19937 engine(seed);
+	std::uniform_real_distribution<float> dist(newObjSizeMin, newObjSizeMax);
+
+
+	// set center
+	if (d[1] != 0) {
+		center[1] = newObjDistanceY;
+	}
+	else {
+		center[1] = newObjDistanceXZ;
+	}
+
+	Quaternion q;
+	q.RotateObject(center, rot, center);
+
+
+	// set delta
+	for (int i = 0; i < 3; i++) {
+		delta[i] = dist(engine);
+	}
+
+
+	return;
+}
+
 
 
 void Object::MakeObject(int result[16][3]) {
