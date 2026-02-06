@@ -25,6 +25,7 @@ bool Perspective::SetXY(float pos[3], float result[2]) {
 
 
 
+// use in object.cpp
 float Perspective::GetFov() {
 	return fov;
 }

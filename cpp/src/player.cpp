@@ -45,6 +45,12 @@ void Player::Rotate(float rot[4]) {
 	if (CheckHitKey(KEY_INPUT_D) == 1) {
 		q.ProductWorld(rot, -deltaRotate, 3, rot);
 	}
+	if (CheckHitKey(KEY_INPUT_R) == 1) {
+		rot[0] = 1;
+		for (int i = 1; i < 4; i++) {
+			rot[i] = 0;
+		}
+	}
 
 	return;
 }

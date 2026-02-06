@@ -95,10 +95,17 @@ void Quaternion::ProductQuaternion(float left[4], float right[4], float result[4
 		{left[3], -left[2],  left[1],  left[0]}
 	};
 
+	// avoid changing value
+	float newRight[4];
+	for (int i = 0; i < 4; i++) {
+		newRight[i] = right[i];
+	}
+
 	// calculate
 	for (int i = 0; i < 4; i++) {
+		result[i] = 0;
 		for (int j = 0; j < 4; j++) {
-			result[i] += newLeft[i][j] * right[j];
+			result[i] += newLeft[i][j] * newRight[j];
 		}
 	}
 

@@ -17,15 +17,16 @@ void Object::UpdateObjectList(float objList[16][3], float rot[4], int direction[
 	// set create angle
 	SetTheta(direction);
 	
-	float rotObj[4];
+	float rotObj[4] = {0, 0, 0, 0};
 	Quaternion q;
 	q.ProductLocal(rot, thetaX, 1, rotObj);
 	q.ProductLocal(rotObj, thetaZ, 3, rotObj);
-
+	
 
 	// create object
 	SetCenterAndDelta(rotObj, direction);
 	MakeObject(objList);
+
 
 	return;
 }
@@ -41,13 +42,13 @@ void Object::SetTheta(int d[3]) {
 	std::random_device seed_gen;
 	std::uint32_t seed = seed_gen();
 	std::mt19937 engine(seed);
-	std::uniform_real_distribution<float> dist(-1, 1);
+	std::uniform_real_distribution<float> dist(0, 0);
 
 	// x: fov / 2(-> change view from \/ to \|) / 2(-> quaternion uses half anguler)
 	Perspective p;
 	float fov = p.GetFov();
 
-	thetaX = fov / 2 / 2;
+	thetaX = fov / 2 / 2 / 5;
 
 	// z: x * aspect
 	int sx, sy;
@@ -100,6 +101,9 @@ void Object::SetCenterAndDelta(float rot[4], int d[3]) {
 
 
 	// set center
+	center[0] = 0;
+	center[2] = 0;
+
 	if (d[1] != 0) {
 		center[1] = newObjDistanceY;
 	}
