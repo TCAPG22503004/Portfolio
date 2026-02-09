@@ -14,11 +14,14 @@ class Game {
 		float objectPos[nObj][16][3];	// [num of object][num of vertex][(x, y, z)]
 		float objectPosRotated[nObj][16][3];
 		float drawPos[nObj][16][2];
+		bool isInside;
+		bool isBehind;
 
 		void Init();
 		void CreateObjectInit();
 		void RotateObject();
 		void Projection();
+		void UpdateObject(int i);
 		void Draw();
 
 	public:

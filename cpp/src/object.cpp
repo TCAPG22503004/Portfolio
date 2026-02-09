@@ -20,11 +20,6 @@ void Object::Rotate(float objList[16][3], float rot[4], float result[16][3]) {
 
 void Object::UpdateObjectList(float objList[16][3], float rot[4], int direction[3]) {
 
-	// not create
-	int zero[3] = {0, 0, 0};
-	if (direction == zero) return;
-
-
 	// set create angle
 	SetTheta(direction);
 	
@@ -53,19 +48,22 @@ void Object::SetTheta(int d[3]) {
 	std::random_device seed_gen;
 	std::uint32_t seed = seed_gen();
 	std::mt19937 engine(seed);
-	std::uniform_real_distribution<float> dist(0, 0);
+	std::uniform_real_distribution<float> dist(-1, 1);
 
-	// x: fov / 2(-> change view from \/ to \|) / 2(-> quaternion uses half anguler)
+	// thetaX -> rotate based x axis (look like moving z direction)
+	// thetaZ -> rotate based z axis (look like moving x direction)
+
+	// z =   fov / 2 (-> change view from \/ to \|) / 2 (-> quaternion uses half anguler)
 	Perspective p;
 	float fov = p.GetFov();
 
-	thetaX = fov / 2 / 2 / 5;
+	thetaZ = fov / 2 / 2;
 
-	// z: x * aspect
+	// x: z * aspect
 	int sx, sy;
 	GetScreenState(&sx, &sy, NULL);
 
-	thetaZ = thetaX * sy / sx;
+	thetaX = thetaZ * sy / sx;
 
 
 	// set theta
@@ -77,8 +75,9 @@ void Object::SetTheta(int d[3]) {
 
 	else {
 		// create outside of left or right
+		// (+1 or -1) * 1.2 (-> create outside of screen with consider object's size)
 		if (d[0] != 0) {
-			thetaX *= d[0];
+			thetaZ *= d[0] * 1.2;
 		}
 	
 		// (else) create random position
@@ -87,8 +86,9 @@ void Object::SetTheta(int d[3]) {
 		}
 	
 		// create outside of up or down
+		// (+1 or -1) * 1.3 (-> create outside of screen with consider object's size)
 		if (d[2] != 0) {
-			thetaZ *= d[2];
+			thetaZ *= d[2] * 1.3;
 		}
 	
 		// (else) create random position

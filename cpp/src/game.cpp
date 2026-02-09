@@ -27,6 +27,9 @@ int Game::GameMode() {
 		RotateObject();
 		Projection();
 
+		// update object
+
+
 		// draw
 		Draw();
 
@@ -88,10 +91,18 @@ void Game::Projection() {
 	for (int i = 0; i < nObj; i++) {
 		// flag to check inside of screen
 		bool isInside = false;
+		bool isBehind = false;
 
 		for (int j = 0; j < 16; j++) {
 			// convert screen coordinate
-			p.SetXY(objectPosRotated[i][j], drawPos[i][j]);
+			isBehind = p.SetXY(objectPosRotated[i][j], drawPos[i][j]);
+
+
+			// is behind from camera?
+			if (isBehind) {
+				isInside = true;
+				break;
+			}
 
 			// is inside of screen?
 			if (isInside == false) {
@@ -105,10 +116,62 @@ void Game::Projection() {
 				}
 			}
 		}
+
+		// create object if one is out of screen
+		UpdateObject(i);
 	}
 
 	return;
 }
+
+
+
+void Game::UpdateObject(int i) {
+
+	if (isInside) return;
+
+	// save direction creating new object
+	int newObjectDirection[3] = {0, 0, 0};
+
+	// create foward
+	if (isBehind) {
+		newObjectDirection[1] = 1;
+	}
+
+	// create out of screen
+	else {
+		newObjectDirection[1] = 0;
+
+		float x = drawPos[i][0][0];
+		float z = drawPos[i][0][2];
+
+		// create right
+		if (x < 0) {
+			newObjectDirection[0] = 1;
+		}
+
+		// create left
+		else if (x > sx) {
+			newObjectDirection[0] = -1;
+		}
+
+		// create top
+		if (z < 0) {
+			newObjectDirection[2] = 1;
+		}
+
+		// create bottom
+		else if (z > sy) {
+			newObjectDirection[2] = -1;
+		}
+	}
+
+	Object o;
+	o.UpdateObjectList(objectPos[i], playerRot, newObjectDirection);
+
+	return;
+}
+
 
 
 void Game::Draw() {

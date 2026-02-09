@@ -33,10 +33,10 @@ void Player::Rotate(float rot[4]) {
 	if (CheckHitKey(KEY_INPUT_S) == 1) {
 		q.ProductWorld(rot, -deltaRotate, 1, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_Q) == 1) {
+	if (CheckHitKey(KEY_INPUT_E) == 1) {
 		q.ProductWorld(rot, deltaRotate, 2, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_E) == 1) {
+	if (CheckHitKey(KEY_INPUT_Q) == 1) {
 		q.ProductWorld(rot, -deltaRotate, 2, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_A) == 1) {
