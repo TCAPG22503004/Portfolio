@@ -24,6 +24,7 @@ int Game::GameMode() {
 		p.Rotate(playerRot);
 
 		// convert screen coordinate
+		RotateObject();
 		Projection();
 
 		// draw
@@ -46,6 +47,10 @@ void Game::Init() {
 
 	GetScreenState(&sx, &sy, NULL);
 	white = GetColor(255, 255, 255);
+	playerRot[0] = 1;
+	playerRot[1] = 0;
+	playerRot[2] = 0;
+	playerRot[3] = 0;
 
 	return;
 }
@@ -65,6 +70,17 @@ void Game::CreateObjectInit() {
 }
 
 
+void Game::RotateObject() {
+
+	Object o;
+	for (int i = 0; i < nObj; i++) {
+		o.Rotate(objectPos[i], playerRot, objectPosRotated[i]);
+	}
+
+	return;
+}
+
+
 void Game::Projection() {
 
 	Perspective p;
@@ -75,7 +91,7 @@ void Game::Projection() {
 
 		for (int j = 0; j < 16; j++) {
 			// convert screen coordinate
-			p.SetXY(objectPos[i][j], drawPos[i][j]);
+			p.SetXY(objectPosRotated[i][j], drawPos[i][j]);
 
 			// is inside of screen?
 			if (isInside == false) {

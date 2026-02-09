@@ -7,6 +7,17 @@
 /* ----------------
 	public
 ------------------- */
+void Object::Rotate(float objList[16][3], float rot[4], float result[16][3]) {
+
+	Quaternion q;
+	for (int i = 0; i < 16; i++) {
+		q.RotateObject(objList[i], rot, result[i]);
+	}
+
+	return;
+}
+
+
 void Object::UpdateObjectList(float objList[16][3], float rot[4], int direction[3]) {
 
 	// not create

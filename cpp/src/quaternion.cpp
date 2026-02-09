@@ -5,7 +5,7 @@
 	public
 ------------------- */
 void Quaternion::RotateObject(float pos[3], float rot[4], float result[3]) {
-
+	
 		// make matrix
 		float a[3][3];
 		a[0][0] = rot[0]*rot[0] + rot[1]*rot[1] - rot[2]*rot[2] - rot[3]*rot[3];
@@ -20,10 +20,17 @@ void Quaternion::RotateObject(float pos[3], float rot[4], float result[3]) {
 
 
 		// product
+		// It's not work changing result[i] value directly, so use new float[3]
+		float add[3] = {0, 0, 0};
+		
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
-				result[i] += a[i][j] * pos[j];
+				add[i] += a[i][j] * pos[j];
 			}
+		}
+
+		for (int i = 0; i < 3; i++) {
+			result[i] = add[i];
 		}
 
 		return;
