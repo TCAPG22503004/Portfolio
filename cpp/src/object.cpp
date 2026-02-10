@@ -23,9 +23,9 @@ void Object::UpdateObjectList(float objList[16][3], float rot[4], int direction[
 	// set create angle
 	SetTheta(direction);
 	
-	float rotObj[4] = {0, 0, 0, 0};
+	float rotObj[4] = {rot[0], -rot[1], -rot[2], -rot[3]};
 	Quaternion q;
-	q.ProductLocal(rot, thetaX, 1, rotObj);
+	q.ProductLocal(rotObj, thetaX, 1, rotObj);
 	q.ProductLocal(rotObj, thetaZ, 3, rotObj);
 	
 
@@ -35,6 +35,12 @@ void Object::UpdateObjectList(float objList[16][3], float rot[4], int direction[
 
 
 	return;
+}
+
+
+// use in game.cpp
+int Object::GetMergin() {
+	return newObjSizeMax / 2;
 }
 
 
@@ -65,10 +71,9 @@ void Object::SetTheta(int d[3]) {
 
 	thetaX = thetaZ * sy / sx;
 
-
 	// set theta
 	// create front
-	if (d[1] != 0) {
+	if (d[2] != 0) {
 		thetaX *= dist(engine);
 		thetaZ *= dist(engine);
 	}
@@ -77,23 +82,23 @@ void Object::SetTheta(int d[3]) {
 		// create outside of left or right
 		// (+1 or -1) * 1.2 (-> create outside of screen with consider object's size)
 		if (d[0] != 0) {
-			thetaZ *= d[0] * 1.2;
-		}
-	
-		// (else) create random position
-		else {
-			thetaX *= dist(engine);
-		}
-	
-		// create outside of up or down
-		// (+1 or -1) * 1.3 (-> create outside of screen with consider object's size)
-		if (d[2] != 0) {
-			thetaZ *= d[2] * 1.3;
+			thetaZ *= d[0];
 		}
 	
 		// (else) create random position
 		else {
 			thetaZ *= dist(engine);
+		}
+	
+		// create outside of up or down
+		// (+1 or -1) * 1.3 (-> create outside of screen with consider object's size)
+		if (d[1] != 0) {
+			thetaX *= d[1];
+		}
+	
+		// (else) create random position
+		else {
+			thetaX *= dist(engine);
 		}
 	}
 
@@ -115,7 +120,7 @@ void Object::SetCenterAndDelta(float rot[4], int d[3]) {
 	center[0] = 0;
 	center[2] = 0;
 
-	if (d[1] != 0) {
+	if (d[2] != 0) {
 		center[1] = newObjDistanceY;
 	}
 	else {

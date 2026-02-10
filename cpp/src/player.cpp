@@ -27,22 +27,22 @@ void Player::Rotate(float rot[4]) {
 
 	Quaternion q;
 
-	if (CheckHitKey(KEY_INPUT_W) == 1) {
+	if (CheckHitKey(KEY_INPUT_S) == 1) {
 		q.ProductWorld(rot, deltaRotate, 1, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_S) == 1) {
+	if (CheckHitKey(KEY_INPUT_W) == 1) {
 		q.ProductWorld(rot, -deltaRotate, 1, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_E) == 1) {
+	if (CheckHitKey(KEY_INPUT_Q) == 1) {
 		q.ProductWorld(rot, deltaRotate, 2, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_Q) == 1) {
+	if (CheckHitKey(KEY_INPUT_E) == 1) {
 		q.ProductWorld(rot, -deltaRotate, 2, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_A) == 1) {
+	if (CheckHitKey(KEY_INPUT_D) == 1) {
 		q.ProductWorld(rot, deltaRotate, 3, rot);
 	}
-	if (CheckHitKey(KEY_INPUT_D) == 1) {
+	if (CheckHitKey(KEY_INPUT_A) == 1) {
 		q.ProductWorld(rot, -deltaRotate, 3, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_R) == 1) {

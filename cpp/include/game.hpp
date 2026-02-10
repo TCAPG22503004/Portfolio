@@ -10,12 +10,15 @@ class Game {
 		unsigned int white;
 		float playerPos[3];
 		float playerRot[4];
-		static const int nObj = 10;
+		static const int nObj = 1;
 		float objectPos[nObj][16][3];	// [num of object][num of vertex][(x, y, z)]
 		float objectPosRotated[nObj][16][3];
 		float drawPos[nObj][16][2];
+		float drawRangeMin[2];		//[(x, y)]
+		float drawRangeMax[2];		//[(x, y)]
 		bool isInside;
 		bool isBehind;
+		int mergin;
 
 		void Init();
 		void CreateObjectInit();

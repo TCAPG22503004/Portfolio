@@ -55,6 +55,9 @@ void Game::Init() {
 	playerRot[2] = 0;
 	playerRot[3] = 0;
 
+	Object o;
+	mergin = o.GetMergin();
+
 	return;
 }
 
@@ -62,7 +65,7 @@ void Game::Init() {
 void Game::CreateObjectInit() {
 
 	// create forward
-	int createDirection[3] = {0, 1, 0};
+	int createDirection[3] = {0, 0, 1};
 
 	Object o;
 	for (int i = 0; i < nObj; i++) {
@@ -89,9 +92,13 @@ void Game::Projection() {
 	Perspective p;
 
 	for (int i = 0; i < nObj; i++) {
-		// flag to check inside of screen
-		bool isInside = false;
-		bool isBehind = false;
+	
+		drawRangeMin[0] = 65535;
+		drawRangeMin[1] = 65535;
+		drawRangeMax[0] = -1;
+		drawRangeMax[1] = -1;
+		isInside = false;
+		isBehind = false;
 
 		for (int j = 0; j < 16; j++) {
 			// convert screen coordinate
@@ -100,19 +107,35 @@ void Game::Projection() {
 
 			// is behind from camera?
 			if (isBehind) {
-				isInside = true;
+				isInside = false;
 				break;
 			}
 
 			// is inside of screen?
 			if (isInside == false) {
+
+				float x = drawPos[i][j][0];
+				float y = drawPos[i][j][1];
+				int xMin = 0 - mergin;
+				int xMax = sx + mergin;
+				int yMin = 0 - mergin;
+				int yMax = sy + mergin;
+
 				if (
-					drawPos[i][j][0] > 0  &&
-					drawPos[i][j][0] < sx &&
-					drawPos[i][j][1] > 0  &&
-					drawPos[i][j][1] < sy
+					x > xMin &&
+					x < xMax &&
+					y > yMin &&
+					y < yMax
 				) {
 					isInside = true;
+				}
+
+				// save minimize & maximize position
+				else {
+					if (drawRangeMin[0] > x) drawRangeMin[0] = x;
+					if (drawRangeMin[1] > y) drawRangeMin[1] = y;
+					if (drawRangeMax[0] < x) drawRangeMax[0] = x;
+					if (drawRangeMax[1] < y) drawRangeMax[1] = y;
 				}
 			}
 		}
@@ -135,34 +158,29 @@ void Game::UpdateObject(int i) {
 
 	// create foward
 	if (isBehind) {
-		newObjectDirection[1] = 1;
+		newObjectDirection[2] = 1;
 	}
 
 	// create out of screen
 	else {
-		newObjectDirection[1] = 0;
-
-		float x = drawPos[i][0][0];
-		float z = drawPos[i][0][2];
-
 		// create right
-		if (x < 0) {
-			newObjectDirection[0] = 1;
-		}
-
-		// create left
-		else if (x > sx) {
+		if (drawRangeMax[0] < 0) {
 			newObjectDirection[0] = -1;
 		}
 
+		// create left
+		else if (drawRangeMin[0] > sx) {
+			newObjectDirection[0] = 1;
+		}
+
 		// create top
-		if (z < 0) {
-			newObjectDirection[2] = 1;
+		if (drawRangeMin[1] > sy) {
+			newObjectDirection[1] = 1;
 		}
 
 		// create bottom
-		else if (z > sy) {
-			newObjectDirection[2] = -1;
+		else if (drawRangeMax[1] < 0) {
+			newObjectDirection[1] = -1;
 		}
 	}
 

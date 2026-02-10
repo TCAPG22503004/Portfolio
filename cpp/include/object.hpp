@@ -19,6 +19,7 @@ class Object {
 	public:
 		void Rotate(float objList[16][3], float rot[4], float result[16][3]);
 		void UpdateObjectList(float objList[16][3], float rot[4], int direction[3]);
+		int GetMergin();
 };
 
 # endif

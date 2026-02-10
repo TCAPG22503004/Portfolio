@@ -4,7 +4,7 @@
 class Player {
 	private:
 		float moveSpeed = 3;
-		float deltaRotate = 0.01;
+		float deltaRotate = 0.005;
 
 	public:
 		void Move(float pos[3], float rot[4]);
