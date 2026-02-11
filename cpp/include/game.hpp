@@ -24,6 +24,7 @@ class Game {
 		void Projection();
 		void UpdateObject(int i);
 		void Draw();
+		bool ConfigOrTitle();
 
 	public:
 		int GameMode();

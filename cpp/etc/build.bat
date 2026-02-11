@@ -12,6 +12,7 @@ set f4=player
 set f5=object
 set f6=perspective
 set f7=quaternion
+set f8=write
 
 
 

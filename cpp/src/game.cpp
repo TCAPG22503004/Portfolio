@@ -1,4 +1,5 @@
 # include "DxLib.h"
+# include "config.hpp"
 # include "game.hpp"
 # include "object.hpp"
 # include "perspective.hpp"
@@ -31,14 +32,16 @@ int Game::GameMode() {
 		TransformObject();
 		Projection();
 
-		// update object
-
-
 		// draw
 		Draw();
 
-		if (CheckHitKey(KEY_INPUT_ESCAPE)) isLoop = false;
+		// config & exit loop
+		if (CheckHitKey(KEY_INPUT_ESCAPE)) {
+			isLoop = ConfigOrTitle();
+			p.SetParameter();
+		}
 
+		// loop
 		WaitTimer(1000 / fps);
 		if (ProcessMessage() == -1) break;
 	}
@@ -192,4 +195,17 @@ void Game::Draw() {
 	ScreenFlip();
 
 	return;
+}
+
+
+bool Game::ConfigOrTitle() {
+
+	// display config
+	Config c;
+	int n = c.ConfigGame();
+
+	// continue or finish game
+	if (n == 1) return true;
+
+	return false;
 }
