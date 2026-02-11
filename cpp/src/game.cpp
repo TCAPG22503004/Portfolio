@@ -16,7 +16,10 @@ int Game::GameMode() {
 	// create at first
 	CreateObjectInit();
 
+	// prepare loop
 	Player p;
+	p.SetParameter();
+
 	bool isLoop = true;
 	while (isLoop) {
 	

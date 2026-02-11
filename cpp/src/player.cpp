@@ -1,4 +1,5 @@
 # include "DxLib.h"
+# include "config.hpp"
 # include "player.hpp"
 # include "quaternion.hpp"
 
@@ -28,28 +29,50 @@ void Player::Rotate(float rot[4]) {
 	Quaternion q;
 
 	if (CheckHitKey(KEY_INPUT_S) == 1) {
-		q.ProductWorld(rot, deltaRotate, 1, rot);
+		q.ProductWorld(rot, deltaRotate[0], 1, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_W) == 1) {
-		q.ProductWorld(rot, -deltaRotate, 1, rot);
+		q.ProductWorld(rot, -deltaRotate[0], 1, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_E) == 1) {
-		q.ProductWorld(rot, deltaRotate, 2, rot);
+		q.ProductWorld(rot, deltaRotate[1], 2, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_Q) == 1) {
-		q.ProductWorld(rot, -deltaRotate, 2, rot);
+		q.ProductWorld(rot, -deltaRotate[1], 2, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_D) == 1) {
-		q.ProductWorld(rot, deltaRotate, 3, rot);
+		q.ProductWorld(rot, deltaRotate[2], 3, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_A) == 1) {
-		q.ProductWorld(rot, -deltaRotate, 3, rot);
+		q.ProductWorld(rot, -deltaRotate[2], 3, rot);
 	}
 	if (CheckHitKey(KEY_INPUT_R) == 1) {
 		rot[0] = 1;
 		for (int i = 1; i < 4; i++) {
 			rot[i] = 0;
 		}
+	}
+
+	return;
+}
+
+
+void Player::SetParameter() {
+
+	int v;
+	int t[3];
+
+	// read file
+	Config c;
+	c.ReadParameter(&v, t);
+
+	// set move speed
+	moveSpeed = v * 10;
+
+	// set angular speed
+	for (int i = 0; i < 3; i++) {
+		float f = t[i];		// cast int to float
+		deltaRotate[i] = f / 1000;
 	}
 
 	return;
