@@ -1,5 +1,6 @@
 # include "DxLib.h"
 # include "title.hpp"
+# include "config.hpp"
 # include "game.hpp"
 
 
@@ -22,6 +23,7 @@ void AfterInit() {
 void MainLoop() {
 
 	Title title;
+	Config config;
 	Game game;
 
 	int mode = 0;
@@ -36,6 +38,10 @@ void MainLoop() {
 
 			case 1:
 				mode = game.GameMode();
+				break;
+
+			case 2:
+				mode = config.ConfigTitle();
 				break;
 
 			default:

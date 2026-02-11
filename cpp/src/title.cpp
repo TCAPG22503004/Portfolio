@@ -25,6 +25,9 @@ int Title::TitleMode() {
 	// start game
 	if (select == 0) return 1;
 
+	//config
+	else if (select == 1) return 2;
+
 	return -1;
 }
 
