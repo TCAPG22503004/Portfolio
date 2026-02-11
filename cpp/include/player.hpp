@@ -3,7 +3,7 @@
 
 class Player {
 	private:
-		float moveSpeed = 3;
+		float moveSpeed = 30;
 		float deltaRotate = 0.005;
 
 	public:

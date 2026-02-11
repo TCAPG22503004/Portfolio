@@ -14,7 +14,7 @@ class Perspective {
 		void Init();
 
 	public:
-		bool SetXY(float pos[3], float result[2]);
+		void SetXY(float pos[3], float result[2]);
 		float GetFov();
 };
 

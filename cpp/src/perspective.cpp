@@ -6,12 +6,12 @@
 /* ----------------
 	public
 ------------------- */
-bool Perspective::SetXY(float pos[3], float result[2]) {
+void Perspective::SetXY(float pos[3], float result[2]) {
 
 	Init();
 
 	// behind
-	if (pos[1] < 0) return true;
+	if (pos[1] < 0) return;
 
 	// convert x to x, z to y
 	int x = cameraDistance * pos[0] / pos[1] + sx;
@@ -20,7 +20,7 @@ bool Perspective::SetXY(float pos[3], float result[2]) {
 	result[0] = x;
 	result[1] = y;
 
-	return false;
+	return;
 }
 
 

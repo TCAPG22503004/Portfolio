@@ -22,9 +22,10 @@ int Game::GameMode() {
 	
 		// player movement
 		p.Rotate(playerRot);
+		p.Move(playerPos, playerRot);
 
 		// convert screen coordinate
-		RotateObject();
+		TransformObject();
 		Projection();
 
 		// update object
@@ -48,15 +49,22 @@ int Game::GameMode() {
 ------------------- */
 void Game::Init() {
 
+	// dxlib
 	GetScreenState(&sx, &sy, NULL);
 	white = GetColor(255, 255, 255);
-	playerRot[0] = 1;
-	playerRot[1] = 0;
-	playerRot[2] = 0;
-	playerRot[3] = 0;
 
-	Object o;
-	mergin = o.GetMergin();
+	// player parameter
+	playerRot[0] = 1;
+	for (int i = 0; i < 3; i++) {
+		playerPos[i] = 0;
+		playerRot[i+1] = 0;
+	}
+
+	// mergin of screen
+	xMin = 0 - mergin;
+	xMax = sx + mergin;
+	yMin = 0 - mergin;
+	yMax = sy + mergin;
 
 	return;
 }
@@ -65,22 +73,22 @@ void Game::Init() {
 void Game::CreateObjectInit() {
 
 	// create forward
-	int createDirection[3] = {0, 0, 1};
+	int createDirection[2] = {0, 0};
 
 	Object o;
 	for (int i = 0; i < nObj; i++) {
-		o.UpdateObjectList(objectPos[i], playerRot, createDirection);
+		o.UpdateObjectList(playerPos, playerRot, createDirection, objectPos[i]);
 	}
 
 	return;
 }
 
 
-void Game::RotateObject() {
+void Game::TransformObject() {
 
 	Object o;
 	for (int i = 0; i < nObj; i++) {
-		o.Rotate(objectPos[i], playerRot, objectPosRotated[i]);
+		o.MoveAndRotate(objectPos[i], playerPos, playerRot, objectPosRelative[i]);
 	}
 
 	return;
@@ -93,33 +101,17 @@ void Game::Projection() {
 
 	for (int i = 0; i < nObj; i++) {
 	
-		drawRangeMin[0] = 65535;
-		drawRangeMin[1] = 65535;
-		drawRangeMax[0] = -1;
-		drawRangeMax[1] = -1;
 		isInside = false;
-		isBehind = false;
 
 		for (int j = 0; j < 16; j++) {
 			// convert screen coordinate
-			isBehind = p.SetXY(objectPosRotated[i][j], drawPos[i][j]);
-
-
-			// is behind from camera?
-			if (isBehind) {
-				isInside = false;
-				break;
-			}
+			p.SetXY(objectPosRelative[i][j], drawPos[i][j]);
 
 			// is inside of screen?
 			if (isInside == false) {
 
-				float x = drawPos[i][j][0];
-				float y = drawPos[i][j][1];
-				int xMin = 0 - mergin;
-				int xMax = sx + mergin;
-				int yMin = 0 - mergin;
-				int yMax = sy + mergin;
+				x = drawPos[i][j][0];
+				y = drawPos[i][j][1];
 
 				if (
 					x > xMin &&
@@ -128,14 +120,6 @@ void Game::Projection() {
 					y < yMax
 				) {
 					isInside = true;
-				}
-
-				// save minimize & maximize position
-				else {
-					if (drawRangeMin[0] > x) drawRangeMin[0] = x;
-					if (drawRangeMin[1] > y) drawRangeMin[1] = y;
-					if (drawRangeMax[0] < x) drawRangeMax[0] = x;
-					if (drawRangeMax[1] < y) drawRangeMax[1] = y;
 				}
 			}
 		}
@@ -153,39 +137,32 @@ void Game::UpdateObject(int i) {
 
 	if (isInside) return;
 
-	// save direction creating new object
-	int newObjectDirection[3] = {0, 0, 0};
+	int newObjectDirection[2] = {0, 0};
 
-	// create foward
-	if (isBehind) {
-		newObjectDirection[2] = 1;
+
+	// create right
+	if (x < 0) {
+		newObjectDirection[0] = -1;
 	}
 
-	// create out of screen
-	else {
-		// create right
-		if (drawRangeMax[0] < 0) {
-			newObjectDirection[0] = -1;
-		}
-
-		// create left
-		else if (drawRangeMin[0] > sx) {
-			newObjectDirection[0] = 1;
-		}
-
-		// create top
-		if (drawRangeMin[1] > sy) {
-			newObjectDirection[1] = 1;
-		}
-
-		// create bottom
-		else if (drawRangeMax[1] < 0) {
-			newObjectDirection[1] = -1;
-		}
+	// create left
+	else if (x > sx) {
+		newObjectDirection[0] = 1;
 	}
 
+	// create top
+	if (y > sy) {
+		newObjectDirection[1] = 1;
+	}
+
+	// create bottom
+	else if (y < 0) {
+		newObjectDirection[1] = -1;
+	}
+
+	// create new object
 	Object o;
-	o.UpdateObjectList(objectPos[i], playerRot, newObjectDirection);
+	o.UpdateObjectList(playerPos, playerRot, newObjectDirection, objectPos[i]);
 
 	return;
 }
@@ -206,10 +183,6 @@ void Game::Draw() {
 			int y2 = drawPos[i][j+1][1];
 			DrawLine(x1, y1, x2, y2, white);
 		}
-	}
-
-	for (int i = 0; i < 4; i++) {
-		DrawFormatString(i*100, 700, white, "%f", playerRot[i]);
 	}
 
 	// display
