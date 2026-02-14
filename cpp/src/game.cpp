@@ -21,8 +21,7 @@ int Game::GameMode() {
 	Player p;
 	p.SetParameter();
 
-	bool isLoop = true;
-	while (isLoop) {
+	while (true) {
 	
 		// player movement
 		p.Rotate(playerRot);
@@ -37,7 +36,7 @@ int Game::GameMode() {
 
 		// config & exit loop
 		if (CheckHitKey(KEY_INPUT_ESCAPE)) {
-			isLoop = ConfigOrTitle();
+			if (ConfigOrTitle()) break;
 			p.SetParameter();
 		}
 
@@ -66,11 +65,11 @@ void Game::Init() {
 		playerRot[i+1] = 0;
 	}
 
-	// mergin of screen
-	xMin = 0 - mergin;
-	xMax = sx + mergin;
-	yMin = 0 - mergin;
-	yMax = sy + mergin;
+	// margin of screen
+	xMin = 0 - margin;
+	xMax = sx + margin;
+	yMin = 0 - margin;
+	yMax = sy + margin;
 
 	return;
 }
@@ -205,7 +204,7 @@ bool Game::ConfigOrTitle() {
 	int n = c.ConfigGame();
 
 	// continue or finish game
-	if (n == 1) return true;
+	if (n == 1) return false;
 
-	return false;
+	return true;
 }

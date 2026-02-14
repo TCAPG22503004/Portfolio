@@ -5,7 +5,7 @@ class Game {
 
 	private:
 		int fps = 60;
-		int mergin = 250;
+		int margin = 250;
 
 		int sx, sy;
 		unsigned int white;
