@@ -1,6 +1,8 @@
 # ifndef GAME
 # define GAME
 
+# include "constant.hpp"
+
 class Game {
 
 	private:
@@ -12,9 +14,9 @@ class Game {
 		float playerPos[3];
 		float playerRot[4];
 		static const int nObj = 10;
-		float objectPos[nObj][16][3];	// [num of object][num of vertex][(x, y, z)]
-		float objectPosRelative[nObj][16][3];
-		float drawPos[nObj][16][2];
+		float objectPos[nObj][N_VERTEX][3];	// [num of object][num of vertex][(x, y, z)]
+		float objectPosRelative[nObj][N_VERTEX][3];
+		float drawPos[nObj][N_VERTEX][2];
 		bool isInside;
 		int x, y, xMin, xMax, yMin, yMax;
 

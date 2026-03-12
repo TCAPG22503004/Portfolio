@@ -1,6 +1,8 @@
 # ifndef OBJECT
 # define OBJECT
 
+# include "constant.hpp"
+
 class Object {
 	private:
 		int newObjDistanceMin = 5000;
@@ -14,11 +16,11 @@ class Object {
 
 		void SetTheta(int d[2]);
 		void SetCenterAndDelta(float pos[3], float rot[4]);
-		void MakeObject(float result[16][3]);
+		void MakeObject(float result[N_VERTEX][3]);
 
 	public:
-		void MoveAndRotate(float objList[16][3], float pos[3], float rot[4], float result[16][3]);
-		void UpdateObjectList(float pos[3], float rot[4], int direction[2], float result[16][3]);
+		void MoveAndRotate(float objList[N_VERTEX][3], float pos[3], float rot[4], float result[N_VERTEX][3]);
+		void UpdateObjectList(float pos[3], float rot[4], int direction[2], float result[N_VERTEX][3]);
 };
 
 # endif

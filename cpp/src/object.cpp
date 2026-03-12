@@ -7,10 +7,10 @@
 /* ----------------
 	public
 ------------------- */
-void Object::MoveAndRotate(float objList[16][3], float pos[3], float rot[4], float result[16][3]) {
+void Object::MoveAndRotate(float objList[N_VERTEX][3], float pos[3], float rot[4], float result[N_VERTEX][3]) {
 
 	Quaternion q;
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < N_VERTEX; i++) {
 	
 		// move origin
 		for (int j = 0; j < 3; j++) {
@@ -25,7 +25,7 @@ void Object::MoveAndRotate(float objList[16][3], float pos[3], float rot[4], flo
 }
 
 
-void Object::UpdateObjectList(float pos[3], float rot[4], int direction[3], float result[16][3]) {
+void Object::UpdateObjectList(float pos[3], float rot[4], int direction[3], float result[N_VERTEX][3]) {
 
 	// set create angle
 	SetTheta(direction);
@@ -137,10 +137,10 @@ void Object::SetCenterAndDelta(float pos[3], float rot[4]) {
 
 
 
-void Object::MakeObject(float result[16][3]) {
+void Object::MakeObject(float result[N_VERTEX][3]) {
 
 	// + or - list
-	int sign[16][3] = {
+	int sign[N_VERTEX][3] = {
 		{-1, +1, -1},
 		{-1, -1, -1},
 		{+1, -1, -1},
@@ -161,7 +161,7 @@ void Object::MakeObject(float result[16][3]) {
 
 	
 	// make vertex list
-	for (int i = 0; i < 16; i++) {
+	for (int i = 0; i < N_VERTEX; i++) {
 		for (int j = 0; j < 3; j++) {
 			result[i][j] = center[j] + delta[j] * sign[i][j];	
 		}

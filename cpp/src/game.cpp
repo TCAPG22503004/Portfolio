@@ -108,7 +108,7 @@ void Game::Projection() {
 	
 		isInside = false;
 
-		for (int j = 0; j < 16; j++) {
+		for (int j = 0; j < N_VERTEX; j++) {
 			// convert screen coordinate
 			p.SetXY(objectPosRelative[i][j], drawPos[i][j]);
 
@@ -181,7 +181,7 @@ void Game::Draw() {
 
 	// draw line
 	for (int i = 0; i < nObj; i++) {
-		for (int j = 0; j < 16 - 1; j++) {
+		for (int j = 0; j < N_VERTEX - 1; j++) {
 			int x1 = drawPos[i][j][0];
 			int y1 = drawPos[i][j][1];
 			int x2 = drawPos[i][j+1][0];
